@@ -45,6 +45,35 @@ async function run() {
         res.send(result)
     })
 
+    //all jobs
+    app.get("/all-jobs",async(req,res)=>{
+        const page = parseInt(req.query.page) - 1;
+        const size = parseInt(req.query.size);
+        const search = req.query.search;
+
+        const query = {
+          jobTitle: { $regex: search, $options: "i" },
+        };
+        const result = await jobCollection
+        .find(query)
+        .skip(page*size)
+        .limit(size)
+        .toArray();
+        res.send(result);
+
+    })
+
+    //count job
+    app.get("/jobs-count", async(req,res)=>{
+        const search = req.query.search;
+        let query = {
+          jobTitle: { $regex: search, $options: "i" },
+        };
+        const count = await jobCollection.countDocuments(query);
+        res.send({count})
+
+    })
+
 
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
