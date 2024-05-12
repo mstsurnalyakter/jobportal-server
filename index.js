@@ -21,7 +21,7 @@ app.use(cors(corsOptions));
 
 
 
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.jimwvxl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 
@@ -78,6 +78,16 @@ async function run() {
       const result = await jobCollection.insertOne(req.body);
       res.send(result);
     })
+
+    app.get("/my-jobs/:email", async(req,res)=>{
+      const result = await jobCollection.find({"user.email":req.params.email}).toArray();
+      res.send(result);
+    })
+    app.delete("/my-job/:id", async (req, res) => {
+      const result = await jobCollection
+        .deleteOne({ _id: new ObjectId(req.params.id) })
+      res.send(result);
+    });
 
 
     console.log(
