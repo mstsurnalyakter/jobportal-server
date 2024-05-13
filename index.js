@@ -37,7 +37,7 @@ async function run() {
   try {
 
     const jobCollection = client.db("jobPortal").collection("jobs");
-
+    const applyJobCollection = client.db("jobPortal").collection("applyJobs");
 
     //job related api
     app.get("/jobs", async(req,res)=>{
@@ -74,10 +74,15 @@ async function run() {
     })
 
     app.post("/add-jobs",async(req,res)=>{
-      console.log(req.body);
       const result = await jobCollection.insertOne(req.body);
       res.send(result);
     })
+
+    app.post("/apply-job",async(req,res)=>{
+      console.log(req.body);
+      const result = await applyJobCollection.insertOne(req.body);
+      res.send(result);
+    });
 
     app.get("/my-jobs/:email", async(req,res)=>{
       const result = await jobCollection.find({"user.email":req.params.email}).toArray();
@@ -88,6 +93,11 @@ async function run() {
         .deleteOne({ _id: new ObjectId(req.params.id) })
       res.send(result);
     });
+
+    app.get("/job/:id", async(req,res)=>{
+      const result = await jobCollection.findOne({_id: new ObjectId(req.params.id)});
+      res.send(result)
+    })
 
 
     console.log(
