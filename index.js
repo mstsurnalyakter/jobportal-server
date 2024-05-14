@@ -73,6 +73,26 @@ async function run() {
         .toArray();
       res.send(result);
     });
+
+    app.get("/update-job/:id",async(req,res)=>{
+      const result = await jobCollection.findOne({_id:new ObjectId(req.params.id)});
+      res.send(result)
+    })
+
+
+    app.put("/update-job/:id",async(req,res)=>{
+      console.log(req.body);
+      const filter = {
+        _id: new ObjectId(req.params.id),
+      };
+
+      const updateDoc = {
+        $set: { ...req.body },
+      };
+      const result = await jobCollection.updateOne(filter,updateDoc);
+      res.send(result)
+    })
+
     app.delete("/my-job/:id", async (req, res) => {
       const result = await jobCollection.deleteOne({
         _id: new ObjectId(req.params.id),
