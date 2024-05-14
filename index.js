@@ -16,10 +16,16 @@ const corsOptions = {
   ],
   credentials: true,
 };
+// const corsConfig = {
+//   origin: "*",
+//   credentials: true,
+//   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+// };
+// app.use(cors(corsConfig));
 
 //middleware setup
-app.use(express.json());
 app.use(cors(corsOptions));
+app.use(express.json());
 app.use(cookieParser());
 
 
